@@ -1,13 +1,21 @@
-// Firebase App (the core Firebase SDK) is always required and
-// must be listed before other Firebase SDKs
-import * as firebase from "firebase/app";
+import { initializeApp } from "firebase/app";
+    import {
+    GoogleAuthProvider,
+    getAuth,
+    signInWithPopup,
+    signInAnonymously,
+    signOut,
+} from "firebase/auth";
+import {
+    getFirestore,
+    query,
+    getDocs,
+    collection,
+    where,
+    addDoc,
+} from "firebase/firestore";
 
-// Add the Firebase services that you want to use
-// We only want to use Firebase Auth here
-import "firebase/auth";
-
-// Your app's Firebase configuration
-var firebaseConfig = {
+const firebaseConfig = {
     apiKey: "AIzaSyCpy2hjbPy5XTHCaH8D7zw1HMteFSN_VWA",
     authDomain: "fir-auth-react-redux-9fa86.firebaseapp.com",
     projectId: "fir-auth-react-redux-9fa86",
@@ -17,8 +25,51 @@ var firebaseConfig = {
     measurementId: "G-9T5K426J1P"
 };
 
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const googleProvider = new GoogleAuthProvider();
 
-// Finally, export it to use it throughout your app
-export default firebase;
+const signInWithGoogle = async () => {
+    try {
+        const res = await signInWithPopup(auth, googleProvider);
+        console.log(res);
+        const user = res.user;
+        const q = query(collection(db, "users"), where("uid", "==", user.uid));
+        const docs = await getDocs(q);
+        if (docs.docs.length === 0) {
+            await addDoc(collection(db, "users"), {
+                uid: user.uid,
+                name: user.displayName,
+                authProvider: "google",
+                email: user.email,
+            });
+        }
+    } catch (err) {
+        console.error(err);
+        alert(err.message);
+    }
+};
+
+const signInRandom = async () => {
+    try {
+        const res = await signInAnonymously(auth)
+    } catch (err) {
+        console.error(err);
+        alert(err.message);
+    }
+};
+
+const logout = () => {
+    const res = signOut(auth);
+    console.log(res);
+};
+
+export {
+    auth,
+    db,
+    signInRandom,
+    signInWithGoogle,
+    logout,
+}
+
