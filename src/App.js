@@ -14,7 +14,7 @@ class App extends Component {
         <div className="App">
           <Navbar />
           <Routes>
-            <Route exact path="/" element={<SignIn />} />
+            <Route exact path="/login" element={<SignIn />} />
             <Route exact path="/dashboard" element={<Dashboard />} />
   
             <Route exact path="/profile/:id" render={(props) => (

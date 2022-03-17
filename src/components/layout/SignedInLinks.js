@@ -7,7 +7,7 @@ const SignedInLinks = () => {
     return (
         <ul className="right">
             <li><NavLink to="/">Status</NavLink></li>
-            <li><NavLink to="/" onClick={logout}>Log Out</NavLink></li>
+            <li><NavLink to="/login" onClick={logout}>Log Out</NavLink></li>
             <li><NavLink to="/" className="btn btn-floating pink lighten-1">NN</NavLink></li>
         </ul>
     );

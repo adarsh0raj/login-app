@@ -53,7 +53,8 @@ const signInWithGoogle = async () => {
 
 const signInRandom = async () => {
     try {
-        const res = await signInAnonymously(auth)
+        const res = await signInAnonymously(auth);
+        console.log(res);
     } catch (err) {
         console.error(err);
         alert(err.message);
